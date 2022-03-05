@@ -5,26 +5,24 @@
 var Rooms = {
 
   // TODO: Define how you want to store the list of rooms
-  _data: [],
+  _data: new Set(),
 
   // TODO: Define methods which allow you to add rooms, update the list,
   // mark a room as selected, etc.
   addRooms: function () {
-    var count = 25;
-    for (var i = 0; i < count; i++) {
+    for (var i = 0; i < Messages._data.length; i++) {
       if (!Messages._data[i].username || !Messages._data[i].text) {
-        count++;
         continue;
       }
 
-      if (Rooms._data.indexOf(Messages._data[i].roomname) === -1 && Messages._data[i].roomname !== null) {
-        Rooms._data.push(Messages._data[i].roomname);
+      if (Messages._data[i].roomname) {
+        Rooms._data.add(Messages._data[i].roomname);
       }
     }
   },
 
-  markRoomSelected: function () {
-
+  add: function (newRoom) {
+    Rooms._data.add(newRoom);
   }
 
 };

@@ -1,19 +1,19 @@
-describe('chatterbox', function() {
+describe('chatterbox', function () {
 
-  describe('ajax behavior', function() {
+  describe('ajax behavior', function () {
     var ajaxSpy;
 
-    before(function() {
+    before(function () {
       ajaxSpy = sinon.stub($, 'ajax');
       App.initialize();
     });
 
-    beforeEach(function() {
+    beforeEach(function () {
       ajaxSpy.reset();
     });
 
-    describe('creating', function() {
-      it('should submit a POST request via $.ajax', function(done) {
+    describe('creating', function () {
+      it('should submit a POST request via $.ajax', function (done) {
         Parse.create({});
         expect($.ajax.calledOnce).to.be.true;
         // sinon.spy method `args` comes in the form [function calls][arguments from that call]
@@ -22,7 +22,7 @@ describe('chatterbox', function() {
         done();
       });
 
-      it('should send the message along with the request as a stringified object', function(done) {
+      it('should send the message along with the request as a stringified object', function (done) {
         var message = {
           username: 'Mel Brooks',
           text: 'It\'s good to be the king',
@@ -36,7 +36,7 @@ describe('chatterbox', function() {
         done();
       });
 
-      it('should send the correct message along with the request', function(done) {
+      it('should send the correct message along with the request', function (done) {
         var message = {
           username: 'Mel Brooks',
           text: 'It\'s good to be the king',
@@ -52,8 +52,8 @@ describe('chatterbox', function() {
 
     });
 
-    describe('fetching', function() {
-      it('should submit a GET request via $.ajax', function(done) {
+    describe('fetching', function () {
+      it('should submit a GET request via $.ajax', function (done) {
         Parse.readAll();
         expect($.ajax.calledOnce).to.be.true;
         ajaxUrl = typeof $.ajax.args[0][0] === 'string' ? $.ajax.args[0][0] : $.ajax.args[0][0].url;
@@ -64,8 +64,8 @@ describe('chatterbox', function() {
     });
   });
 
-  describe('chatroom behavior', function() {
-    it('should be able to add messages to the DOM', function() {
+  describe('chatroom behavior', function () {
+    it('should be able to add messages to the DOM', function () {
       var message = {
         username: 'Mel Brooks',
         text: 'Never underestimate the power of the Schwartz!',
@@ -75,15 +75,15 @@ describe('chatterbox', function() {
       expect($('#chats').children().length).to.equal(1);
     });
 
-    it('should be able to add rooms to the DOM', function() {
+    it('should be able to add rooms to the DOM', function () {
       RoomsView.renderRoom('superLobby');
       expect($('#rooms select').children().length).to.equal(1);
     });
 
   });
 
-  describe('events', function() {
-    it('should add a friend upon clicking their username', function() {
+  describe('events', function () {
+    it('should add a friend upon clicking their username', function () {
       sinon.spy(Friends, 'toggleStatus');
 
       App.initialize();
@@ -98,7 +98,7 @@ describe('chatterbox', function() {
       Friends.toggleStatus.restore();
     });
 
-    it('should add a room when clicking add', function() {
+    it('should add a room when clicking add', function () {
       sinon.spy(Rooms, 'add');
       var prompt = window.prompt;
       window.prompt = sinon.stub().returns('testroom');
@@ -111,12 +111,13 @@ describe('chatterbox', function() {
       Rooms.add.restore();
     });
 
-    it('should try to send a message upon clicking submit', function() {
+    it('should try to send a message upon clicking submit', function () {
       sinon.spy(Parse, 'create');
 
       App.initialize();
       $('#message').val('Why so many Mel Brooks quotes?');
-      $('form .submit').trigger('submit');
+      $('form').trigger('submit');
+      // $('form .submit').trigger('submit');
       expect(Parse.create.called).to.be.true;
 
       Parse.create.restore();

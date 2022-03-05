@@ -4,7 +4,6 @@
 var RoomsView = {
 
   roomName: null,
-  currRoom: null,
 
   $button: $('#rooms button'),
   $select: $('#rooms select'),
@@ -16,15 +15,14 @@ var RoomsView = {
     App.fetch(Rooms.addRooms);
     App.fetch(RoomsView.render);
 
+    RoomsView.$select.on('change', RoomsView.handleChange);
   },
 
   render: function () {
     // TODO: Render out the list of rooms.
-    for (var i = 0; i < Rooms._data.length; i++) {
-      if (Rooms._data[i].roomname) {
-        RoomsView.$select.append(`<option>${Rooms._data[i].roomname}</option>`);
-      }
-    }
+    Rooms._data.forEach((room) => {
+      RoomsView.$select.append(`<option>${room}</option>`);
+    });
   },
 
   renderRoom: function (roomname) {
@@ -32,20 +30,38 @@ var RoomsView = {
     RoomsView.$select.append(`<option>${roomname}</option>`);
   },
 
-  handleChange: function (event) {
+  handleChange: function () {
     // TODO: Handle a user selecting a different room.
+    // console.log(RoomsView.$select.val());
+    if (RoomsView.$select.val() === 'All Rooms') {
+      MessagesView.render();
+      return;
+    }
+
+    MessagesView.$chats.empty();
+    var messages = '';
+    var count = 25;
+    for (var i = 0; i < count; i++) {
+      if (!Messages._data[i].username || !Messages._data[i].text) {
+        count++;
+        continue;
+      }
+
+      if (Messages._data[i].roomname === RoomsView.$select.val()) {
+        messages += MessageView.render({
+          'username': Messages._data[i].username,
+          'text': Messages._data[i].text
+        });
+      }
+    }
+
+    MessagesView.$chats.append(messages);
   },
 
   handleClick: function (event) {
     // TODO: Handle the user clicking the "Add Room" button.
-    RoomsView.currRoom = prompt('Room name?');
-    Rooms.addRooms(RoomsView.currRoom);
+    var currRoom = prompt('Room name?');
+    Rooms.add(currRoom);
   }
 
 };
-
-// $('button').on('click', function () {
-//   var roomName = prompt('Room name?');
-//   $('select').append(`<option>${roomName}</option>`);
-// });
-

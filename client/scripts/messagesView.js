@@ -8,11 +8,11 @@ var MessagesView = {
   initialize: function () {
     // TODO: Perform any work which needs to be done
     // when this view loads.
-    App.fetch(MessagesView.render);
   },
 
   render: function () {
     // TODO: Render _all_ the messages.
+    MessagesView.$chats.empty();
     var messages = '';
     var count = 25;
     for (var i = 0; i < count; i++) {
